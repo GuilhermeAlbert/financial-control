@@ -14,6 +14,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+/**
+ * Rotas com middleware
+ */
+Route::group(['middleware' => ['auth:api']], function () {
+    // Auth routes
+    Route::get('auth/logout', 'AuthController@logout');
+    Route::get('auth/user', 'AuthController@user');
+});
+
+/**
+ * Routes without middleware
+ */
+Route::group([], function () {
+    // Auth routes
+    Route::post('auth/login', 'AuthController@login');
+    Route::post('auth/signup', 'AuthController@signup');
 });

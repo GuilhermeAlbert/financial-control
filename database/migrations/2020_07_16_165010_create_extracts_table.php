@@ -16,6 +16,7 @@ class CreateExtractsTable extends Migration
         Schema::create('extracts', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
