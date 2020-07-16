@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Services;
+
+use App\Interfaces\Services\StubInterface;
+
+class StubService implements StubInterface
+{
+    // Protected variable context
+    protected $service;
+
+    /**
+     * Constructor method to instantiate a instance
+     */
+    public function __construct(Stub $service)
+    {
+        $this->service = $service;
+    }
+}

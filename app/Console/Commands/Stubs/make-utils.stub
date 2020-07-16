@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Utils;
+
+/*
+ * Stub utils
+ *
+ * Use method: StubUtils::SOMETHING;
+ */
+class StubUtils extends Utils
+{
+    /**
+     * Something here
+     */
+    const SOMETHING = 1;
+}

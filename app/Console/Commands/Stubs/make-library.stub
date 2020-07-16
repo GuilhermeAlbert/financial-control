@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Libraries\PayrollLayout;
+
+use App\PayrollLayoutFile;
+
+class StubLibrary extends PayrollLayoutLibrary
+{
+    // Private variable context
+    private $columnSeparator = ";";
+    private $fileContent;
+
+    /**
+     * Constructor method
+     */
+    public function __construct()
+    {
+        // 
+    }
+
+    /**
+     * Monta o conteúdo do arquivo
+     * @return Any $fileContent
+     */
+    public function fetchFileContent(PayrollLayoutFile $payrollLayoutFile)
+    {
+        for ($count = 0; $count < 10; $count++) {
+            $this->fileContent[$count][1] = $this->getEvent($payrollLayoutFile);
+            $this->fileContent[$count][2] = $this->columnSeparator;
+        }
+
+        return $this->createPayrollLayoutFile($this->fileContent, $payrollLayoutFile);
+    }
+
+    /**
+     * Evento digitado
+     * @return String
+     */
+    private function getEvent($payrollLayoutFile)
+    {
+        return "0001";
+    }
+}

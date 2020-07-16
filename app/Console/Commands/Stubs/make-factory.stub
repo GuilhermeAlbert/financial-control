@@ -1,0 +1,10 @@
+<?php
+
+namespace App\Factory;
+
+use App\Factories\Factory;
+
+class StubFactory extends Factory
+{
+    // 
+}
