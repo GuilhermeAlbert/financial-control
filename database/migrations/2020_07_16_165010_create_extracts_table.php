@@ -15,6 +15,12 @@ class CreateExtractsTable extends Migration
     {
         Schema::create('extracts', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('value');
+            $table->foreignId('account_id')->constrained();
+            $table->unsignedBigInteger('recipient_id');
+            $table->foreign('recipient_id')->references('id')->on('people');
+            $table->foreignId('transaction_id')->constrained();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -15,6 +15,7 @@ class CreatePeopleTable extends Migration
     {
         Schema::create('people', function (Blueprint $table) {
             $table->id();
+            $table->string('document')->unique();
             $table->timestamps();
             $table->softDeletes();
         });

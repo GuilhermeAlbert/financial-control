@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\TransactionRepository;
-use App\Http\Requests\Transaction\{
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Repositories\UserRepository;
+use App\Http\Requests\User\{
     Index,
     Show,
     Store,
@@ -13,23 +15,23 @@ use App\Http\Requests\Transaction\{
 use App\Http\Resources\{DefaultErrorResource, DefaultResource};
 use App\Utils\HttpStatusCodeUtils;
 
-class TransactionController extends Controller
+class UserController extends Controller
 {
     // Protected items context
     protected $model;
 
     /**
      * Constructor method
-     * @param TransactionRepository $model
+     * @param UserRepository $model
      */
-    public function __construct(TransactionRepository $model)
+    public function __construct(UserRepository $model)
     {
         $this->model = $model;
     }
 
     /**
-     * Returns all transactions
-     * @api {GET} /api/transactions
+     * Returns all users
+     * @api {GET} /api/users
      * @param Index $request
      * @return Resource json
      */
@@ -46,8 +48,8 @@ class TransactionController extends Controller
     }
 
     /**
-     * Returns a specific transaction
-     * @api {GET} /api/transactions/{transaction}
+     * Returns a specific user
+     * @api {GET} /api/users/{user}
      * @param Show $request
      * @return Resource json
      */
@@ -55,7 +57,7 @@ class TransactionController extends Controller
     {
         try {
 
-            $object = $request->transaction;
+            $object = $request->user;
 
             return new DefaultResource($object);
         } catch (\Exception $error) {
@@ -64,8 +66,8 @@ class TransactionController extends Controller
     }
 
     /**
-     * Create a new transaction
-     * @api {POST} /api/transactions
+     * Create a new user
+     * @api {POST} /api/users
      * @param Store $request
      * @return Resource json
      */
@@ -82,8 +84,8 @@ class TransactionController extends Controller
     }
 
     /**
-     * Update a specific transaction
-     * @api {GET} /api/transactions/{transaction}
+     * Update a specific user
+     * @api {GET} /api/users/{user}
      * @param Update $request
      * @return Resource json
      */
@@ -91,7 +93,7 @@ class TransactionController extends Controller
     {
         try {
 
-            $object = $this->model->update($request->inputs, $request->transaction);
+            $object = $this->model->update($request->inputs, $request->user);
 
             return new DefaultResource($object);
         } catch (\Exception $error) {
@@ -100,8 +102,8 @@ class TransactionController extends Controller
     }
 
     /**
-     * Delete a specific transaction
-     * @api {GET} /api/transactions/{transaction}
+     * Delete a specific user
+     * @api {GET} /api/users/{user}
      * @param Destroy $request
      * @return Resource json
      */
@@ -109,7 +111,7 @@ class TransactionController extends Controller
     {
         try {
 
-            $this->model->delete($request->transaction);
+            $this->model->delete($request->user);
 
             return (new DefaultResource([]))->response()->setStatusCode(HttpStatusCodeUtils::NO_CONTENT);
         } catch (\Exception $error) {

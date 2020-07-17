@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\Repositories\StubInterface;
+use App\Interfaces\Repositories\ExtractInterface;
 use App\Repositories\BaseRepository;
-use App\Stub;
+use App\Extract;
 
-class ExtractRepository extends BaseRepository implements StubInterface
+class ExtractRepository extends BaseRepository implements ExtractInterface
 {
     // Protected variable context
     protected $model;
@@ -14,7 +14,7 @@ class ExtractRepository extends BaseRepository implements StubInterface
     /**
      * Constructor method to instantiate a instance
      */
-    public function __construct(Stub $model)
+    public function __construct(Extract $model)
     {
         $this->model = $model;
     }

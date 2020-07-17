@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\Repositories\StubInterface;
+use App\Interfaces\Repositories\TransactionInterface;
 use App\Repositories\BaseRepository;
-use App\Stub;
+use App\Transaction;
 
-class TransactionRepository extends BaseRepository implements StubInterface
+class TransactionRepository extends BaseRepository implements TransactionInterface
 {
     // Protected variable context
     protected $model;
@@ -14,7 +14,7 @@ class TransactionRepository extends BaseRepository implements StubInterface
     /**
      * Constructor method to instantiate a instance
      */
-    public function __construct(Stub $model)
+    public function __construct(Transaction $model)
     {
         $this->model = $model;
     }

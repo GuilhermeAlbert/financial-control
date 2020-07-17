@@ -15,6 +15,9 @@ class CreateAccountsTable extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('balance');
+            $table->foreignId('person_id')->constrained();
             $table->timestamps();
             $table->softDeletes();
         });
