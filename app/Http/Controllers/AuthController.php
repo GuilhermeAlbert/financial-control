@@ -42,6 +42,7 @@ class AuthController extends Controller
     {
         try {
             $object = $this->model->create($request->inputs);
+            if ($object) $this->model->attachPersonWithUser($object, $request->document);
             return (new DefaultResource($object))->response()->setStatusCode(HttpStatusCodeUtils::CREATED);
         } catch (\Exception $error) {
             return new DefaultErrorResource(['errors' => $error->getMessage()]);

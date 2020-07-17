@@ -43,6 +43,7 @@ class SignUp extends FormRequest
             'name'       => 'full name',
             'email'      => 'email address',
             'password'   => 'user password',
+            'document'   => 'person document'
         ];
     }
 
@@ -57,6 +58,7 @@ class SignUp extends FormRequest
             'name'      => ['required', 'string'],
             'email'     => ['required', 'string', 'email', 'unique:users'],
             'password'  => ['required', 'string'],
+            'document'  => ['required', 'string']
         ];
     }
 
