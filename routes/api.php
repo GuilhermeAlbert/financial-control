@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,19 +14,35 @@ use Illuminate\Support\Facades\Route;
 */
 
 /**
- * Rotas com middleware
+ * Routes with middleware
  */
 Route::group(['middleware' => ['auth:api']], function () {
-    // Auth routes
+
+    Route::patch('accounts/restore', 'AccountController@restore');
+    Route::resource('accounts', 'AccountController');
+
+    Route::patch('addresses/restore', 'AddressController@restore');
+    Route::resource('addresses', 'AddressController');
+
     Route::get('auth/logout', 'AuthController@logout');
     Route::get('auth/user', 'AuthController@user');
+
+    Route::patch('extracts/restore', 'ExtractController@restore');
+    Route::resource('extracts', 'ExtractController');
+
+    Route::patch('people/restore', 'PersonController@restore');
+    Route::resource('people', 'PersonController');
+
+    Route::patch('transactions/restore', 'TransactionController@restore');
+    Route::resource('transactions', 'TransactionController');
+
+    Route::resource('users', 'UserController');
 });
 
 /**
  * Routes without middleware
  */
 Route::group([], function () {
-    // Auth routes
     Route::post('auth/login', 'AuthController@login');
     Route::post('auth/signup', 'AuthController@signup');
 });

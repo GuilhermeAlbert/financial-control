@@ -8,7 +8,8 @@ use App\Http\Requests\Address\{
     Show,
     Store,
     Update,
-    Destroy
+    Destroy,
+    Restore
 };
 use App\Http\Resources\{DefaultErrorResource, DefaultResource};
 use App\Utils\HttpStatusCodeUtils;
@@ -112,6 +113,24 @@ class AddressController extends Controller
             $this->model->delete($request->address);
 
             return (new DefaultResource([]))->response()->setStatusCode(HttpStatusCodeUtils::NO_CONTENT);
+        } catch (\Exception $error) {
+            return new DefaultErrorResource(['errors' => $error->getMessage()]);
+        }
+    }
+
+    /**
+     * Restore a specific address
+     * @api {GET} /api/addresses/restore
+     * @param Destroy $request
+     * @return Resource json
+     */
+    public function restore(Restore $request)
+    {
+        try {
+
+            $data = $this->model->restore($request->address);
+
+            return (new DefaultResource($data))->response()->setStatusCode(HttpStatusCodeUtils::OK);
         } catch (\Exception $error) {
             return new DefaultErrorResource(['errors' => $error->getMessage()]);
         }

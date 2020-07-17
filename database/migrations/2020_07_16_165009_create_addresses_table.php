@@ -17,10 +17,11 @@ class CreateAddressesTable extends Migration
             $table->id();
             $table->string('street');
             $table->string('number');
+            $table->string('city');
             $table->string('state');
-            $table->string('zip_code');
+            $table->string('zip_code')->nullable();
             $table->string('country');
-            $table->string('complement');
+            $table->string('complement')->nullable();
             $table->foreignId('person_id')->constrained();
             $table->timestamps();
             $table->softDeletes();

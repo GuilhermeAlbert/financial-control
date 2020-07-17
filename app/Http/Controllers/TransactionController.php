@@ -8,7 +8,8 @@ use App\Http\Requests\Transaction\{
     Show,
     Store,
     Update,
-    Destroy
+    Destroy,
+    Restore
 };
 use App\Http\Resources\{DefaultErrorResource, DefaultResource};
 use App\Utils\HttpStatusCodeUtils;
@@ -112,6 +113,24 @@ class TransactionController extends Controller
             $this->model->delete($request->transaction);
 
             return (new DefaultResource([]))->response()->setStatusCode(HttpStatusCodeUtils::NO_CONTENT);
+        } catch (\Exception $error) {
+            return new DefaultErrorResource(['errors' => $error->getMessage()]);
+        }
+    }
+
+    /**
+     * Restore a specific transaction
+     * @api {GET} /api/transactions/restore
+     * @param Destroy $request
+     * @return Resource json
+     */
+    public function restore(Restore $request)
+    {
+        try {
+
+            $data = $this->model->restore($request->transaction);
+
+            return (new DefaultResource($data))->response()->setStatusCode(HttpStatusCodeUtils::OK);
         } catch (\Exception $error) {
             return new DefaultErrorResource(['errors' => $error->getMessage()]);
         }
