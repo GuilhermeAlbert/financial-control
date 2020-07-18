@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Account;
 
+use App\Rules\CheckPersonId;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -55,7 +56,7 @@ class Store extends FormRequest
         return [
             'name'       => ['required', 'string'],
             'balance'    => ['required', 'string'],
-            'person_id'  => ['required', 'integer'],
+            'person_id'  => ['required', 'integer', new CheckPersonId($this->person_id)],
         ];
     }
 

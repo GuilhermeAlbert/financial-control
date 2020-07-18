@@ -42,7 +42,7 @@ class AddressController extends Controller
 
             return new DefaultResource($object);
         } catch (\Exception $error) {
-            return new DefaultErrorResource(['errors' => $error->getMessage()]);
+            throw $error;
         }
     }
 
@@ -60,7 +60,7 @@ class AddressController extends Controller
 
             return new DefaultResource($object);
         } catch (\Exception $error) {
-            return new DefaultErrorResource(['errors' => $error->getMessage()]);
+            throw $error;
         }
     }
 
@@ -78,7 +78,7 @@ class AddressController extends Controller
 
             return (new DefaultResource($object))->response()->setStatusCode(HttpStatusCodeUtils::CREATED);
         } catch (\Exception $error) {
-            return new DefaultErrorResource(['errors' => $error->getMessage()]);
+            throw $error;
         }
     }
 
@@ -96,7 +96,7 @@ class AddressController extends Controller
 
             return new DefaultResource($object);
         } catch (\Exception $error) {
-            return new DefaultErrorResource(['errors' => $error->getMessage()]);
+            throw $error;
         }
     }
 
@@ -114,7 +114,7 @@ class AddressController extends Controller
 
             return (new DefaultResource([]))->response()->setStatusCode(HttpStatusCodeUtils::NO_CONTENT);
         } catch (\Exception $error) {
-            return new DefaultErrorResource(['errors' => $error->getMessage()]);
+            throw $error;
         }
     }
 
@@ -132,7 +132,7 @@ class AddressController extends Controller
 
             return (new DefaultResource($data))->response()->setStatusCode(HttpStatusCodeUtils::OK);
         } catch (\Exception $error) {
-            return new DefaultErrorResource(['errors' => $error->getMessage()]);
+            throw $error;
         }
     }
 }

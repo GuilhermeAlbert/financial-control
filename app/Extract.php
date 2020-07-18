@@ -30,10 +30,11 @@ class Extract extends Model
      */
     protected $fillable = [
         'name',
-        'value',
-        'account_id',
+        'previous_balance',
+        'current_balance',
+        'source_account_id',
+        'destination_account_id',
         'transaction_id',
-        'recipient_id',
     ];
 
     /**

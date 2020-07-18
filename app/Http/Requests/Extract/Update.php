@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Extract;
 
 use App\Extract;
+use App\Rules\CheckAccountId;
+use App\Rules\CheckTransactionId;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -43,11 +45,12 @@ class Update extends FormRequest
     public function attributes()
     {
         return [
-            'name'           => 'extract name',
-            'value'          => 'value',
-            'account_id'     => 'account identity',
-            'recipient_id'   => 'recipient identity',
-            'transaction_id' => 'transaction identity',
+            'name'                   => 'transaction name',
+            'previous_balance'       => 'previous account balance',
+            'current_balance'        => 'current account balance',
+            'source_account_id'      => 'source account identity',
+            'destination_account_id' => 'destinationaccount identity',
+            'transaction_id'         => 'transaction identity',
         ];
     }
 
@@ -59,12 +62,13 @@ class Update extends FormRequest
     public function rules()
     {
         return [
-            "extract"        => ["required", "json"],
-            'name'           => ['required', 'string'],
-            'value'          => ['required', 'number'],
-            'account_id'     => ['required', 'integer'],
-            'recipient_id'   => ['required', 'integer'],
-            'transaction_id' => ['required', 'integer'],
+            "extract"                => ["required", "json"],
+            'name'                   => ["required", "string"],
+            'previous_balance'       => ["required", "numeric"],
+            'current_balance'        => ["required", "numeric"],
+            'source_account_id'      => ["required", "integer", new CheckAccountId($this->source_account_id)],
+            'destination_account_id' => ["required", "integer", new CheckAccountId($this->destination_account_id)],
+            'transaction_id'         => ["required", "integer", new CheckTransactionId($this->transaction_id)],
         ];
     }
 

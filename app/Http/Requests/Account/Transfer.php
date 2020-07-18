@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Extract;
+namespace App\Http\Requests\Account;
 
-use App\Rules\CheckAccountId;
+use App\Account;
+use App\Rules\CheckAccountBalance;
 use App\Rules\CheckTransactionId;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Utils\HttpStatusCodeUtils;
+use App\Utils\TransactionUtils;
 
-class Store extends FormRequest
+class Transfer extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,8 +30,14 @@ class Store extends FormRequest
      */
     protected function prepareForValidation()
     {
+        $sourceAccount = Account::find($this->source_account_id);
+        $destinationAccount = Account::find($this->destination_account_id);
+        $transactionId = TransactionUtils::TRANSFER;
+
         $this->merge([
-            // 
+            'source_account'      => $sourceAccount,
+            'destination_account' => $destinationAccount,
+            'transaction_id'      => $transactionId,
         ]);
     }
 
@@ -41,12 +49,11 @@ class Store extends FormRequest
     public function attributes()
     {
         return [
-            'name'                   => 'transaction name',
-            'previous_balance'       => 'previous account balance',
-            'current_balance'        => 'current account balance',
-            'source_account_id'      => 'source account identity',
-            'destination_account_id' => 'destinationaccount identity',
-            'transaction_id'         => 'transaction identity',
+            'name'                    => 'transaction name',
+            'previous_balance'        => 'previous account balance',
+            'current_balance'         => 'current account balance',
+            'source_account_id'       => 'source account identity',
+            'destination_account_id'  => 'destination account identity',
         ];
     }
 
@@ -59,11 +66,13 @@ class Store extends FormRequest
     {
         return [
             'name'                   => ["required", "string"],
-            'previous_balance'       => ["required", "numeric"],
-            'current_balance'        => ["required", "numeric"],
-            'source_account_id'      => ["required", "integer", new CheckAccountId($this->source_account_id)],
-            'destination_account_id' => ["required", "integer", new CheckAccountId($this->destination_account_id)],
+            'previous_balance'       => ["nullable", "numeric"],
+            'current_balance'        => ["required", "numeric", new CheckAccountBalance($this->current_balance, $this->source_account_id)],
+            'source_account_id'      => ["required", "integer"],
+            'destination_account_id' => ["nullable", "integer"],
             'transaction_id'         => ["required", "integer", new CheckTransactionId($this->transaction_id)],
+            'source_account'         => ["required", "json"],
+            'destination_account'    => ["required", "json"],
         ];
     }
 
@@ -90,15 +99,13 @@ class Store extends FormRequest
         $validator->after(function ($validator) {
             if (!$validator->errors()->all()) {
                 $this->merge([
-                    'inputs' => [
-                        'extract'                => $this->extract,
-                        'name'                   => $this->name,
-                        'previous_balance'       => $this->previous_balance,
-                        'current_balance'        => $this->current_balance,
-                        'source_account_id'      => $this->source_account_id,
-                        'destination_account_id' => $this->destination_account_id,
-                        'transaction_id'         => $this->transaction_id,
-                    ],
+                    'name'                   => $this->name,
+                    'previous_balance'       => $this->previous_balance,
+                    'current_balance'        => $this->current_balance,
+                    'transaction_id'         => $this->transaction_id,
+                    'source_account'         => $this->source_account,
+                    'destination_account'    => $this->destination_account,
+                    'previous_balance'       => $this->source_account->balance,
                 ]);
             }
         });

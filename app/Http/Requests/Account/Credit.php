@@ -2,13 +2,16 @@
 
 namespace App\Http\Requests\Account;
 
-use App\Rules\CheckPersonId;
+use App\Account;
+use App\Rules\CheckAccountId;
+use App\Rules\CheckTransactionId;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Utils\HttpStatusCodeUtils;
+use App\Utils\TransactionUtils;
 
-class Update extends FormRequest
+class Credit extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,8 +30,13 @@ class Update extends FormRequest
      */
     protected function prepareForValidation()
     {
+        $destinationAccount = Account::find($this->destination_account_id);
+
+        $transactionId = TransactionUtils::CREDIT;
+
         $this->merge([
-            // 
+            'destination_account' => $destinationAccount,
+            'transaction_id'      => $transactionId,
         ]);
     }
 
@@ -40,9 +48,11 @@ class Update extends FormRequest
     public function attributes()
     {
         return [
-            'name'       => 'account name',
-            'balance'    => 'account balance',
-            'person_id'  => 'person identity',
+            'name'                    => 'transaction name',
+            'previous_balance'        => 'previous account balance',
+            'current_balance'         => 'current account balance',
+            'source_account_id'       => 'source account identity',
+            'destination_account_id'  => 'destination account identity',
         ];
     }
 
@@ -54,9 +64,11 @@ class Update extends FormRequest
     public function rules()
     {
         return [
-            'name'       => ['required', 'string'],
-            'balance'    => ['required', 'string'],
-            'person_id'  => ['required', 'integer', new CheckPersonId($this->person_id)],
+            'name'                   => ["required", "string"],
+            'previous_balance'       => ["nullable", "numeric"],
+            'current_balance'        => ["required", "numeric"],
+            'transaction_id'         => ["required", "integer", new CheckTransactionId($this->transaction_id)],
+            'destination_account'    => ["required", "json"],
         ];
     }
 
@@ -82,14 +94,15 @@ class Update extends FormRequest
     {
         $validator->after(function ($validator) {
             if (!$validator->errors()->all()) {
-
-                $this->body = $this->validated();
-                $this->inputs = [];
-
-                foreach ($this->body as $key => $value) $this->inputs[$key] = $value;
-
                 $this->merge([
-                    'inputs' => $this->inputs,
+                    'name'                   => $this->name,
+                    'previous_balance'       => $this->previous_balance,
+                    'current_balance'        => $this->current_balance,
+                    'source_account_id'      => $this->source_account_id,
+                    'destination_account_id' => $this->destination_account_id,
+                    'transaction_id'         => $this->transaction_id,
+                    'destination_account'    => $this->destination_account,
+                    'previous_balance'       => $this->destination_account->balance,
                 ]);
             }
         });

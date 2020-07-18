@@ -9,7 +9,10 @@ use App\Http\Requests\Account\{
     Store,
     Update,
     Destroy,
-    Restore
+    Restore,
+    Debit,
+    Credit,
+    Transfer,
 };
 use App\Http\Resources\{DefaultErrorResource, DefaultResource};
 use App\Utils\HttpStatusCodeUtils;
@@ -42,7 +45,7 @@ class AccountController extends Controller
 
             return new DefaultResource($object);
         } catch (\Exception $error) {
-            return new DefaultErrorResource(['errors' => $error->getMessage()]);
+            throw $error;
         }
     }
 
@@ -60,7 +63,7 @@ class AccountController extends Controller
 
             return new DefaultResource($object);
         } catch (\Exception $error) {
-            return new DefaultErrorResource(['errors' => $error->getMessage()]);
+            throw $error;
         }
     }
 
@@ -78,7 +81,7 @@ class AccountController extends Controller
 
             return (new DefaultResource($object))->response()->setStatusCode(HttpStatusCodeUtils::CREATED);
         } catch (\Exception $error) {
-            return new DefaultErrorResource(['errors' => $error->getMessage()]);
+            throw $error;
         }
     }
 
@@ -96,7 +99,7 @@ class AccountController extends Controller
 
             return new DefaultResource($object);
         } catch (\Exception $error) {
-            return new DefaultErrorResource(['errors' => $error->getMessage()]);
+            throw $error;
         }
     }
 
@@ -114,7 +117,7 @@ class AccountController extends Controller
 
             return (new DefaultResource([]))->response()->setStatusCode(HttpStatusCodeUtils::NO_CONTENT);
         } catch (\Exception $error) {
-            return new DefaultErrorResource(['errors' => $error->getMessage()]);
+            throw $error;
         }
     }
 
@@ -132,7 +135,86 @@ class AccountController extends Controller
 
             return (new DefaultResource($data))->response()->setStatusCode(HttpStatusCodeUtils::OK);
         } catch (\Exception $error) {
-            return new DefaultErrorResource(['errors' => $error->getMessage()]);
+            throw $error;
+        }
+    }
+
+    /**
+     * Make a debit operation
+     * @api {GET} /api/accounts/debits
+     * @param Destroy $request
+     * @return Resource json
+     */
+    public function debit(Debit $request)
+    {
+        try {
+
+            $data = $request->source_account;
+
+            $this->model->debit(
+                $request->name,
+                $request->previous_balance,
+                $request->current_balance,
+                $request->transaction_id,
+                $data
+            );
+
+            return (new DefaultResource($data))->response()->setStatusCode(HttpStatusCodeUtils::OK);
+        } catch (\Exception $error) {
+            throw $error;
+        }
+    }
+
+    /**
+     * Make a credit operation
+     * @api {GET} /api/accounts/credits
+     * @param Destroy $request
+     * @return Resource json
+     */
+    public function credit(Credit $request)
+    {
+        try {
+
+            $data = $request->destination_account;
+
+            $this->model->credit(
+                $request->name,
+                $request->previous_balance,
+                $request->current_balance,
+                $request->transaction_id,
+                $data
+            );
+
+            return (new DefaultResource($data))->response()->setStatusCode(HttpStatusCodeUtils::OK);
+        } catch (\Exception $error) {
+            throw $error;
+        }
+    }
+
+    /**
+     * Make a transfer operation
+     * @api {GET} /api/accounts/transfers
+     * @param Destroy $request
+     * @return Resource json
+     */
+    public function transfer(Transfer $request)
+    {
+        try {
+
+            $data = $request->source_account;
+
+            $this->model->transfer(
+                $request->name,
+                $request->previous_balance,
+                $request->current_balance,
+                $request->transaction_id,
+                $data,
+                $request->destination_account
+            );
+
+            return (new DefaultResource($data))->response()->setStatusCode(HttpStatusCodeUtils::OK);
+        } catch (\Exception $error) {
+            throw $error;
         }
     }
 }
