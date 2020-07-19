@@ -14,7 +14,7 @@ class CreateExtractsTable extends Migration
     public function up()
     {
         Schema::create('extracts', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->decimal('previous_balance');
             $table->decimal('current_balance');

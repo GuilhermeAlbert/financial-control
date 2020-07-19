@@ -2,12 +2,13 @@
 
 namespace App;
 
+use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Extract extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Uuid;
 
     /**
      * Instancing table of database
@@ -43,7 +44,7 @@ class Extract extends Model
      * @var array
      */
     protected $hidden = [
-        // 
+        'id'
     ];
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Account;
 
+use App\Rules\CheckPersonAccountExistence;
 use App\Rules\CheckPersonId;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
@@ -28,7 +29,7 @@ class Store extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            // 
+            "balance" => 0
         ]);
     }
 
@@ -55,8 +56,8 @@ class Store extends FormRequest
     {
         return [
             'name'       => ['required', 'string'],
-            'balance'    => ['required', 'string'],
-            'person_id'  => ['required', 'integer', new CheckPersonId($this->person_id)],
+            'balance'    => ['required', 'numeric'],
+            'person_id'  => ['required', 'integer', new CheckPersonId($this->person_id), new CheckPersonAccountExistence($this->person_id)],
         ];
     }
 
