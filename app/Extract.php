@@ -59,10 +59,26 @@ class Extract extends Model
     ];
 
     /**
-     * People relationship
+     * Source account relationship
      */
-    public function recipient()
+    public function sourceAccount()
     {
-        return $this->belongsTo('App\Person', 'id', 'recipient_id');
+        return $this->hasOne('App\Account', 'id', 'source_account_id');
+    }
+
+    /**
+     * Destination account relationship
+     */
+    public function destinationAccount()
+    {
+        return $this->hasOne('App\Account', 'id', 'destination_account_id');
+    }
+
+    /**
+     * Transaction relationship
+     */
+    public function transaction()
+    {
+        return $this->hasOne('App\Transaction', 'id', 'transaction_id');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Interfaces\Repositories\AccountInterface;
 use App\Repositories\BaseRepository;
 use App\{Account};
+use App\Jobs\SendTransactionNotification;
 use App\Services\AccountService;
 
 class AccountRepository extends BaseRepository implements AccountInterface
@@ -45,7 +46,8 @@ class AccountRepository extends BaseRepository implements AccountInterface
             'source_account_id'      => $sourceAccount->id,
         ];
 
-        $this->extract->create($inputs);
+        $data = $this->extract->create($inputs);
+        $this->service->notifyUser($data);
     }
 
     /**
@@ -69,7 +71,8 @@ class AccountRepository extends BaseRepository implements AccountInterface
             'destination_account_id' => $destinationAccount->id,
         ];
 
-        $this->extract->create($inputs);
+        $data = $this->extract->create($inputs);
+        $this->service->notifyUser($data);
     }
 
     /**
@@ -96,6 +99,7 @@ class AccountRepository extends BaseRepository implements AccountInterface
             'source_account_id'      => $sourceAccount->id,
         ];
 
-        $this->extract->create($inputs);
+        $data = $this->extract->create($inputs);
+        $this->service->notifyUser($data);
     }
 }

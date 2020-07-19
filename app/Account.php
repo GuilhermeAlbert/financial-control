@@ -59,6 +59,6 @@ class Account extends Model
      */
     public function person()
     {
-        return $this->belongsTo('App\Person', 'id', 'person_id');
+        return $this->belongsTo('App\Person', 'person_id', 'id');
     }
 }
