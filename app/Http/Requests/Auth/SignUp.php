@@ -58,7 +58,7 @@ class SignUp extends FormRequest
             'name'      => ['required', 'string'],
             'email'     => ['required', 'string', 'email', 'unique:users'],
             'password'  => ['required', 'string'],
-            'document'  => ['required', 'string', 'unique:people']
+            'document'  => ['required', 'string', 'unique:people', 'cpf']
         ];
     }
 

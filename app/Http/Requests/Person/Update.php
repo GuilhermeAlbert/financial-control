@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Person;
 
 use App\Person;
+use App\Rules\CheckUserId;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -56,7 +57,8 @@ class Update extends FormRequest
     {
         return [
             "person"     => ["required", "json"],
-            'document'   => ['required', 'string'],
+            'document'   => ['required', 'string', 'unique:people', 'cpf'],
+            'user_id'    => ['required', 'integer', new CheckUserId($this->user_id)]
         ];
     }
 
