@@ -4,7 +4,8 @@ namespace App\Services;
 
 use App\Interfaces\Services\AccountInterface;
 use App\Jobs\SendTransactionNotification;
-use Barryvdh\DomPDF\PDF;
+use App\Utils\StorageUtils;
+use PDF;
 use Illuminate\Support\Facades\Storage;
 
 use function Symfony\Component\String\b;
@@ -73,7 +74,7 @@ class AccountService implements AccountInterface
             $destinationAccountUser =  $destinationAccountPerson->user()->first();
         }
 
-        $pdf = $this->domPDF->loadView('notification', [
+        $pdf = PDF::loadView('notification', [
             'extract'                  => $extract,
             'sourceAccount'            => $sourceAccount,
             'sourceAccountPerson'      => $sourceAccountPerson,
@@ -84,13 +85,15 @@ class AccountService implements AccountInterface
             'transaction'              => $transaction
         ]);
 
-        $storagePathToSave = "invoice" . ".pdf";
+        $fileName = StorageUtils::defineFileName();
+        $storagePathToSave = $fileName . ".pdf";
 
         $pdf->setPaper('a4', 'landscape')->setWarnings(false);
+        $content = $pdf->download()->getOriginalContent();
 
-        // Salva o arquivo no bucket
-        $pdf->save($storagePathToSave);
+        Storage::disk('local')->put($storagePathToSave, $content);
+        $url = Storage::url($storagePathToSave);
 
-        return SendTransactionNotification::dispatch("");
+        return SendTransactionNotification::dispatch($url);
     }
 }
