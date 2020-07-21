@@ -1,6 +1,6 @@
 # Financial Control
 
-Guia de contribuição para/com habilidades técnicas.
+This is a contributing guide with technical skills.
 
 ## Before you start
 
