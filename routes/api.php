@@ -19,9 +19,9 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['auth:api']], function () {
 
     Route::prefix('accounts')->group(function () {
-        Route::post('debits', 'AccountController@debit');
-        Route::post('credits', 'AccountController@credit');
-        Route::post('transfers', 'AccountController@transfer');
+        Route::patch('debits', 'AccountController@debit');
+        Route::patch('credits', 'AccountController@credit');
+        Route::patch('transfers', 'AccountController@transfer');
     });
 
     Route::patch('accounts/restore', 'AccountController@restore');

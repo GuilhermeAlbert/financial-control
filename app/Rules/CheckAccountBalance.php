@@ -32,7 +32,9 @@ class CheckAccountBalance implements Rule
     {
         $account = Account::find($this->accountId);
 
-        if ($account->balance >= $this->currentBalance) return true;
+        if ($account) {
+            if ($account->balance >= $this->currentBalance) return true;
+        }
     }
 
     /**
