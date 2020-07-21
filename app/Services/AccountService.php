@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Interfaces\Services\AccountInterface;
 use App\Jobs\SendTransactionNotification;
 use App\Utils\StorageUtils;
+use Illuminate\Support\Facades\Auth;
 use PDF;
 use Illuminate\Support\Facades\Storage;
 
@@ -89,11 +90,11 @@ class AccountService implements AccountInterface
         $storagePathToSave = $fileName . ".pdf";
 
         $pdf->setPaper('a4', 'landscape')->setWarnings(false);
-        $content = $pdf->download()->getOriginalContent();
 
-        Storage::disk('local')->put($storagePathToSave, $content);
+        Storage::disk('local')->put($storagePathToSave, $pdf->output());
         $url = Storage::url($storagePathToSave);
 
-        return SendTransactionNotification::dispatch($url);
+        $user = Auth::user();
+        return SendTransactionNotification::dispatch($user, $url);
     }
 }

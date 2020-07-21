@@ -3,17 +3,20 @@
 namespace App\Jobs;
 
 use App\Notifications\TransactionNotification;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class SendTransactionNotification implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    private $user;
     private $data;
 
     /**
@@ -28,8 +31,9 @@ class SendTransactionNotification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($user, $data)
     {
+        $this->user = $user;
         $this->data = $data;
     }
 
@@ -40,8 +44,17 @@ class SendTransactionNotification implements ShouldQueue
      */
     public function handle()
     {
-        $user = Auth::user();
+        $this->user->notify(new TransactionNotification($this->data));
+    }
 
-        $user->notify(new TransactionNotification($this->data));
+    /**
+     * Handle a job failure.
+     *
+     * @param  \Exception  $exception
+     * @return void
+     */
+    public function failed(Exception $exception)
+    {
+        Log::debug($exception);
     }
 }
