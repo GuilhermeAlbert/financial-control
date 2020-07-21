@@ -118,4 +118,12 @@ Create the API authentication keys with Passport:
 php artisan passport: install
 ```
 
+#### Queues
+
+To run all queues, execute this following command:
+
+```shell
+php artisan queue:work
+```
+
 After this step, you have the autonomy to manage the application.
